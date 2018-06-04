@@ -1,0 +1,22 @@
+.dialpad {
+  display: grid;
+  width: 675px;
+  grid-template-columns: auto auto auto;
+  margin: auto;
+}
+
+.title {
+  font-size: 100px;
+  text-align: center;
+}
+.numberShow {
+  height: 150px;
+  margin-top: 150px;
+  font-size: 150px;
+  text-align: center;
+}
+.loginOrOutButton {
+  margin-top: 150px;
+  width: 225px;
+  margin: auto;
+}
