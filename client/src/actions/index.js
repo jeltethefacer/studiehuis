@@ -4,6 +4,7 @@ export const LOGIN_CLOCKIN = "LOGIN_CLOCKIN";
 export const LOGIN_CLOCKIN_SUCC = "LOGIN_CLOCKIN_SUCC";
 export const LOGIN_CLOCKIN_FAIL = "LOGIN_CLOCK_FAIL";
 export const LOGIN_STUDENT_SUCC = "LOGIN_STUDENT_SUCC";
+export const LOGIN_MENTOR_SUCC = "LOGIN_MENTOR_SUCC";
 export function changeRole(role) {
   return { type: CHANGE_ROLE, role };
 }
@@ -18,6 +19,10 @@ export function loginClockInFail() {
 
 export function loginStudentSucc(data) {
   return { type: LOGIN_STUDENT_SUCC, data };
+}
+
+export function loginMentorSucc(data) {
+  return { type: LOGIN_MENTOR_SUCC, data };
 }
 
 export function loginClockIn(username, password) {
@@ -44,6 +49,23 @@ export function loginStudent(username, password) {
       })
       .then(function(response) {
         dispatch(loginStudentSucc(response.data));
+      })
+      .catch(function(error) {
+        dispatch(loginClockInFail());
+      });
+  };
+}
+
+export function loginMentor(username, password) {
+  return function(dispatch) {
+    axios
+      .post("/api/loginMentor", {
+        username: username,
+        password: password
+      })
+      .then(function(response) {
+        console.log(response.data);
+        dispatch(loginMentorSucc(response.data));
       })
       .catch(function(error) {
         dispatch(loginClockInFail());

@@ -10,7 +10,7 @@ router.post("/login", function(req, res) {
   var clock_in_id = req.body.clock_in_id;
   d = new Date();
   //checks if the time is right
-  if (d.getHours() < 18 && d.getHours() > 8) {
+  if (d.getHours() < 24 && d.getHours() > 0) {
     var query =
       "select * from currently_logged_in where student_number=" + student;
     console.log(student, "requested a login");
@@ -140,6 +140,46 @@ router.post("/loginStudent", function(req, res) {
             res.sendStatus(409);
           }
         });
+    }
+  });
+});
+
+router.post("/loginMentor", function(req, res) {
+  var username = req.body.username;
+  var password = req.body.password;
+  var jsonToSend = {
+    mentorData: {},
+    studentsData: []
+  };
+  query = "select * from mentor where last_name = '" + username + "'";
+  pool.query(query, function(error, results) {
+    if (error) {
+      res.sendStatus(422);
+      throw error;
+    }
+    if (results[0]) {
+      hashFunction
+        .checkPassword(password, results[0].hash)
+        .then(function(correctPasword) {
+          if (correctPasword) {
+            jsonToSend.mentorData = _.omit(results[0], "hash");
+            query =
+              "select student.student_number,student.front_name, student.last_name, student.weekly_hours, student.made_minutes, student.should_hours from student inner join mentor_class on student.mentor_class_id = mentor_class.mentor_class_id where mentor_class.mentor_id=" +
+              results[0].mentor_id;
+            pool.query(query, function(error, results) {
+              if (error) {
+                res.sendStatus(422);
+                throw error;
+              }
+              jsonToSend.studentsData = results;
+              res.json(jsonToSend);
+            });
+          } else {
+            res.status(409).send("gebruikesnaam of wachtwoord niet correct.");
+          }
+        });
+    } else {
+      res.status(409).send("gebruikesnaam of wachtwoord niet correct.");
     }
   });
 });

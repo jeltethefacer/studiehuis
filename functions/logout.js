@@ -35,8 +35,8 @@ function StudieHuisLogout(LN) {
       loggedInTimeMinutes = Math.floor(
         loggedInTime / 1000 / 60 - time.getTimezoneOffset()
       );
-      if (loggedInTimeMinutes > 3) {
-        loggedInTimeMinutes = 3;
+      if (loggedInTimeMinutes > 45) {
+        loggedInTimeMinutes = 45;
       }
 
       pool.query(query, function(error, results, fields) {
