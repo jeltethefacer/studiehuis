@@ -16,6 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `admin`
+--
+
+DROP TABLE IF EXISTS `admin`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `admin` (
+  `admin_id` int(11) NOT NULL AUTO_INCREMENT,
+  `last_name` varchar(20) NOT NULL,
+  `hash` varchar(100) NOT NULL,
+  PRIMARY KEY (`admin_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `admin`
+--
+
+LOCK TABLES `admin` WRITE;
+/*!40000 ALTER TABLE `admin` DISABLE KEYS */;
+INSERT INTO `admin` VALUES (1,'boelens','$2b$10$i0My6jZtK60UxI6LGEImK.EfKFnZWsXcstGTicBIRHTAv5d0RQEwO');
+/*!40000 ALTER TABLE `admin` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `clock_in_account`
 --
 
@@ -28,7 +53,7 @@ CREATE TABLE `clock_in_account` (
   `hash` varchar(100) NOT NULL,
   PRIMARY KEY (`clock_in_id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,7 +62,7 @@ CREATE TABLE `clock_in_account` (
 
 LOCK TABLES `clock_in_account` WRITE;
 /*!40000 ALTER TABLE `clock_in_account` DISABLE KEYS */;
-INSERT INTO `clock_in_account` VALUES (1,'studiehuis','$2b$10$2DsMe.vN3Tz9Vs49w0QjlOQXtXEDMBfstYmUSDgf1HMR8IHQK.kOG');
+INSERT INTO `clock_in_account` VALUES (1,'studiehuis','$2b$10$2DsMe.vN3Tz9Vs49w0QjlOQXtXEDMBfstYmUSDgf1HMR8IHQK.kOG'),(2,'mediatheek','$2b$10$jYphx/CG5JTL8GQjj17j0.23KwuGxmCcMWc5KSZ7jGUAP0DkHzj3O');
 /*!40000 ALTER TABLE `clock_in_account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -57,7 +82,7 @@ CREATE TABLE `clock_in_sessions` (
   PRIMARY KEY (`clock_in_session_id`),
   KEY `clock_in_id` (`clock_in_id`),
   CONSTRAINT `clock_in_sessions_ibfk_1` FOREIGN KEY (`clock_in_id`) REFERENCES `clock_in_account` (`clock_in_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,7 +91,7 @@ CREATE TABLE `clock_in_sessions` (
 
 LOCK TABLES `clock_in_sessions` WRITE;
 /*!40000 ALTER TABLE `clock_in_sessions` DISABLE KEYS */;
-INSERT INTO `clock_in_sessions` VALUES (129329,1,'2018-06-04 17:04:37','2018-06-05 19:11:11',38);
+INSERT INTO `clock_in_sessions` VALUES (129329,1,'2018-06-04 17:04:37','2018-06-05 19:11:11',38),(129000,1,'2018-06-06 17:20:06','2018-06-06 18:37:00',39),(129329,1,'2018-06-06 17:19:58','2018-06-06 18:37:00',40),(130666,2,'2018-06-06 17:51:25','2018-06-06 18:37:00',41);
 /*!40000 ALTER TABLE `clock_in_sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -175,7 +200,7 @@ CREATE TABLE `student` (
 
 LOCK TABLES `student` WRITE;
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
-INSERT INTO `student` VALUES (129000,2,0,0,'$2b$10$vesDLRmgnEd/VBOO4oTckujhdCktHYQOAUXDrJeHh7EyVqQJ9u/TK',2,'jesper','benus'),(129329,3,45,0,'$2b$10$yGleT5wltiTYFRZaMbGEWuA08EwZ5Bw.vZ7tfBcWVTj9Ab8xpN/Le',1,'jelte','boelens'),(129999,3,0,0,'$2b$10$bFul.bmNsXqVtrMqBNtqTOmWa3oZwDPEP/aemiJ8sNonrKpzkJ3WC',2,'Stan','Berends'),(130666,5,0,0,'$2b$10$vesDLRmgnEd/VBOO4oTckujhdCktHYQOAUXDrJeHh7EyVqQJ9u/TK',1,'siebren','boelens');
+INSERT INTO `student` VALUES (129000,2,45,0,'$2b$10$vesDLRmgnEd/VBOO4oTckujhdCktHYQOAUXDrJeHh7EyVqQJ9u/TK',2,'jesper','benus'),(129329,3,90,0,'$2b$10$yGleT5wltiTYFRZaMbGEWuA08EwZ5Bw.vZ7tfBcWVTj9Ab8xpN/Le',1,'jelte','boelens'),(129999,3,0,0,'$2b$10$bFul.bmNsXqVtrMqBNtqTOmWa3oZwDPEP/aemiJ8sNonrKpzkJ3WC',2,'Stan','Berends'),(130666,5,45,0,'$2b$10$vesDLRmgnEd/VBOO4oTckujhdCktHYQOAUXDrJeHh7EyVqQJ9u/TK',1,'siebren','boelens');
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -188,4 +213,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-05 19:28:40
+-- Dump completed on 2018-06-06 18:39:37

@@ -8,8 +8,8 @@ function scheduleFunction() {
   var minutes = [25, 15, 5, 10, 0, 20, 10, 0];
   var hours = [9, 10, 11, 12, 13, 14, 15, 16];
   //test hours
-  // var hours = [11, 16, 16];
-  // var minutes = [33, 46, 47];
+  //var hours = [18, 16, 16];
+  //var minutes = [37, 46, 47];
   var job = [];
   //creates array of jobs
   for (var x = 0; x < minutes.length; x++) {

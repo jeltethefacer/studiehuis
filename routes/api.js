@@ -184,4 +184,63 @@ router.post("/loginMentor", function(req, res) {
   });
 });
 
+router.post("/loginAdmin", function(req, res) {
+  var username = req.body.username;
+  var password = req.body.password;
+  var jsonToSend = {
+    adminData: {},
+    loggedInStudentsData: []
+  };
+  query = "select * from admin where last_name = '" + username + "'";
+  pool.query(query, function(error, results) {
+    if (error) {
+      res.sendStatus(422);
+      throw error;
+    }
+    if (results[0]) {
+      hashFunction
+        .checkPassword(password, results[0].hash)
+        .then(function(correctPasword) {
+          if (correctPasword) {
+            jsonToSend.adminData = _.omit(results[0], "hash");
+            query = "select * from clock_in_account";
+            pool.query(query, function(error, results) {
+              if (error) {
+                res.sendStatus(422);
+                throw error;
+              }
+              promisesArray = [];
+              results.forEach(function(element) {
+                promisesArray.push(
+                  new Promise(function(resolve, reject) {
+                    query =
+                      "select student.student_number,student.front_name, student.last_name, student.weekly_hours, student.made_minutes, student.should_hours from student inner join currently_logged_in on student.student_number = currently_logged_in.student_number where currently_logged_in.clock_in_id =" +
+                      element.clock_in_id;
+                    pool.query(query, function(error, results) {
+                      if (error) {
+                        reject();
+                      }
+
+                      var returnValue = {
+                        clockInData: element,
+                        studentsData: results
+                      };
+                      resolve(returnValue);
+                    });
+                  })
+                );
+              });
+              Promise.all(promisesArray).then(function(values) {
+                jsonToSend.loggedInStudentsData = values;
+                res.json(jsonToSend);
+              });
+            });
+          }
+        });
+    } else {
+      res.status(409).send("gebruikersnaam of wachtwoord niet correct");
+    }
+  });
+});
+
 module.exports = router;

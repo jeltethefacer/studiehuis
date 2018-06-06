@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { loginClockIn, loginStudent, loginMentor } from "../actions";
+import {
+  loginClockIn,
+  loginStudent,
+  loginMentor,
+  loginAdmin
+} from "../actions";
 class LogIn extends Component {
   constructor(props) {
     super(props);
@@ -44,7 +49,12 @@ class LogIn extends Component {
           this.state.usernameValue,
           this.state.passwordValue
         );
-        console.log("mentor");
+        break;
+      case "Admin":
+        this.props.loginAdmin(
+          this.state.usernameValue,
+          this.state.passwordValue
+        );
         break;
       default:
         console.log("default case");
@@ -98,6 +108,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(loginClockIn(username, password)),
   loginStudent: (username, password) =>
     dispatch(loginStudent(username, password)),
-  loginMentor: (username, password) => dispatch(loginMentor(username, password))
+  loginMentor: (username, password) =>
+    dispatch(loginMentor(username, password)),
+  loginAdmin: (username, password) => dispatch(loginAdmin(username, password))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(LogIn);

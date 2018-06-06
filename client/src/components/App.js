@@ -5,6 +5,7 @@ import ClockInLogin from "./ClockInLogin";
 import LogIn from "./LogIn";
 import Student from "./Student";
 import Mentor from "./Mentor";
+import Admin from "./Admin";
 class App extends Component {
   componentDidMount() {}
   render() {
@@ -17,6 +18,8 @@ class App extends Component {
         return <Student />;
       case "Mentor":
         return <Mentor />;
+      case "Admin":
+        return <Admin />;
       default:
         return <p>login please</p>;
     }

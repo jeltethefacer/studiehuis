@@ -3,7 +3,8 @@ import {
   LOGIN_CLOCKIN_FAIL,
   LOGIN_CLOCKIN_SUCC,
   LOGIN_STUDENT_SUCC,
-  LOGIN_MENTOR_SUCC
+  LOGIN_MENTOR_SUCC,
+  LOGIN_ADMIN_SUCC
 } from "./../actions/index";
 
 const initialState = {
@@ -35,6 +36,11 @@ function user(state = initialState, action) {
       return Object.assign({}, state, {
         loginStatus: 1,
         role: "Mentor"
+      });
+    case LOGIN_ADMIN_SUCC:
+      return Object.assign({}, state, {
+        loginStatus: 1,
+        role: "Admin"
       });
     default:
       return state;
