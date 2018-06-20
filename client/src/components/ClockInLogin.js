@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Button from "./Button";
 import axios from "axios";
 import { connect } from "react-redux";
+import { Redirect } from "react-router";
+import { requestClockInData, checkCookieRole } from "./../actions";
 import "./../css/ClockInLogin.css";
 
 class ClockInLogin extends Component {
@@ -17,7 +19,10 @@ class ClockInLogin extends Component {
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.props.requestClockInData();
+    this.props.checkCookieRole();
+  }
 
   login(LoginLN) {
     axios
@@ -115,6 +120,18 @@ class ClockInLogin extends Component {
     // console.log(this.state.showLoginButton);
     var leerlingNummerForShow = "_______";
     var loginButton = "";
+    //if users comes in directly with url checks the cookies if user is logged in
+    if (
+      (this.props.user.checkRoleStatus === 2 &&
+        this.props.user.role !== "ClockIn") ||
+      (this.props.user.checkRoleStatus === 1 &&
+        this.props.user.role !== "ClockIn")
+    ) {
+      return <Redirect push to="/" />;
+    } else if (this.props.user.checkRoleStatus === 0) {
+      return <div>Loading</div>;
+    }
+
     if (this.state.leerlingNummerInput) {
       leerlingNummerForShow = this.state.leerlingNummerInput;
     }
@@ -168,4 +185,9 @@ const mapStateToProps = state => ({
   ClockIn: state.ClockIn
 });
 
-export default connect(mapStateToProps, null)(ClockInLogin);
+const mapDispatchToProps = dispatch => ({
+  requestClockInData: () => dispatch(requestClockInData()),
+  checkCookieRole: () => dispatch(checkCookieRole())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ClockInLogin);

@@ -1,7 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { requestMentorData, logoutUser, checkCookieRole } from "./../actions";
 import { global_var } from "./../global";
+import { Redirect } from "react-router-dom";
 class Mentor extends Component {
+  componentDidMount() {
+    this.props.requestMentorData();
+    this.props.checkCookieRole();
+  }
+
   students() {
     return this.props.studentsData.map((value, key) => {
       var made_hours = Math.floor(
@@ -24,9 +31,26 @@ class Mentor extends Component {
       );
     });
   }
+
+  logoutButton() {
+    this.props.logoutUser();
+  }
+
   render() {
+    if (
+      (this.props.user.checkRoleStatus === 2 &&
+        this.props.user.role !== "Mentor") ||
+      (this.props.user.checkRoleStatus === 1 &&
+        this.props.user.role !== "Mentor")
+    ) {
+      return <Redirect push to="/" />;
+    } else if (this.props.user.checkRoleStatus === 0) {
+      return <div>Loading</div>;
+    }
+
     return (
       <div>
+        <button onClick={() => this.logoutButton()}>Log Uit</button>
         Hallo {this.props.mentorData.front_name}{" "}
         {this.props.mentorData.last_name} dit zijn de gegevens van u
         mentorleerlingen.<br />
@@ -53,4 +77,10 @@ const mapStateToProps = state => ({
   studentsData: state.mentor.studentsData
 });
 
-export default connect(mapStateToProps, null)(Mentor);
+const mapDispatchToProps = dispatch => ({
+  requestMentorData: () => dispatch(requestMentorData()),
+  logoutUser: () => dispatch(logoutUser()),
+  checkCookieRole: () => dispatch(checkCookieRole())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Mentor);

@@ -1,17 +1,28 @@
-import { LOGIN_MENTOR_SUCC } from "./../actions/index";
+import {
+  REQUEST_MENTOR_DATA_SUCC,
+  REQUEST_MENTOR_DATA_FAIL
+} from "./../actions/index";
 
 const initialState = {
   mentorData: {},
-  studentsData: []
+  studentsData: [],
+  failed: false
 };
 
 function mentor(state = initialState, action) {
   switch (action.type) {
-    case LOGIN_MENTOR_SUCC:
+    case REQUEST_MENTOR_DATA_SUCC:
       console.log(action.data);
       return Object.assign({}, state, {
         mentorData: action.data.mentorData,
-        studentsData: action.data.studentsData
+        studentsData: action.data.studentsData,
+        failed: false
+      });
+    case REQUEST_MENTOR_DATA_FAIL:
+      return Object.assign({}, state, {
+        mentorData: {},
+        studentsData: [],
+        failed: true
       });
     default:
       return state;

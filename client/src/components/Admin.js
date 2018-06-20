@@ -1,7 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { global_var } from "./../global";
+import { requestAdminData, logoutUser, checkCookieRole } from "./../actions";
+import { Redirect } from "react-router-dom";
 class Admin extends Component {
+  componentDidMount() {
+    this.props.requestAdminData();
+    this.props.checkCookieRole();
+  }
   students(studentsList) {
     return studentsList.map((value, key) => {
       var made_hours = Math.floor(
@@ -47,6 +53,17 @@ class Admin extends Component {
     });
   }
   render() {
+    if (
+      (this.props.user.checkRoleStatus === 2 &&
+        this.props.user.role !== "Admin") ||
+      (this.props.user.checkRoleStatus === 1 &&
+        this.props.user.role !== "Admin ")
+    ) {
+      return <Redirect push to="/" />;
+    } else if (this.props.user.checkRoleStatus === 0) {
+      return <div>Loading</div>;
+    }
+
     return (
       <div>
         <p>
@@ -64,4 +81,10 @@ const mapStateToProps = state => ({
   loggedInStudentsData: state.admin.loggedInStudentsData
 });
 
-export default connect(mapStateToProps, null)(Admin);
+const mapDispatchToProps = dispatch => ({
+  requestAdminData: () => dispatch(requestAdminData()),
+  logoutUser: () => dispatch(logoutUser()),
+  checkCookieRole: () => dispatch(checkCookieRole())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Admin);

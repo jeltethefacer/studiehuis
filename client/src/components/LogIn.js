@@ -1,16 +1,19 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Redirect } from "react-router";
 import {
   loginClockIn,
   loginStudent,
   loginMentor,
-  loginAdmin
+  loginAdmin,
+  loginSuperAdmin,
+  checkCookieRole
 } from "../actions";
 class LogIn extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      rolesValue: "Student",
+      rolesValue: "SuperAdmin",
       usernameValue: "",
       passwordValue: ""
     };
@@ -18,6 +21,9 @@ class LogIn extends Component {
     this.handleChangeUsername = this.handleChangeUsername.bind(this);
     this.handleChangePassword = this.handleChangePassword.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  componentDidMount() {
+    this.props.checkCookieRole();
   }
 
   handleChangeRoleSelect(event) {
@@ -56,12 +62,44 @@ class LogIn extends Component {
           this.state.passwordValue
         );
         break;
+      case "SuperAdmin":
+        this.props.loginSuperAdmin(
+          this.state.usernameValue,
+          this.state.passwordValue
+        );
+        console.log("Super Admin");
+        break;
       default:
         console.log("default case");
     }
     event.preventDefault();
   }
-  componentDidMount() {}
+
+  checkedHelper(inputName) {
+    if (inputName === this.state.rolesValue) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  userRedirect() {
+    switch (this.props.user.role) {
+      case "ClockIn":
+        return <Redirect to="/ClockIn" />;
+      case "Student":
+        return <Redirect push to="/Student" />;
+      case "Mentor":
+        return <Redirect push to="/Mentor" />;
+      case "Admin":
+        return <Redirect push to="/Admin" />;
+      case "SuperAdmin":
+        return <Redirect push to="/SuperAdmin" />;
+      default:
+        return <p>login please</p>;
+    }
+  }
+
   render() {
     var warning;
     if (this.props.user.loginStatus === 2) {
@@ -69,34 +107,78 @@ class LogIn extends Component {
         <p>gebruikesnaam/leerlingnummer en/of wachtwoord is incorrect</p>
       );
     }
-    return (
-      <div>
-        {warning}
-        <form onSubmit={this.handleSubmit}>
-          <select name="roles" onChange={this.handleChangeRoleSelect}>
-            <option value="Student">Leerling</option>
-            <option value="ClockIn">inlog systeem</option>
-            <option value="Mentor">Mentor</option>
-            <option value="Admin">administrator</option>
-          </select>
-          <br />
-          gebruikesnaam/leerlingnummer<br />
-          <input
-            type="text"
-            name="username"
-            onChange={this.handleChangeUsername}
-          />
-          <br />
-          wachtwoord :<br />
-          <input
-            type="password"
-            name="password"
-            onChange={this.handleChangePassword}
-          />
-          <input type="submit" />
-        </form>
-      </div>
-    );
+
+    switch (this.props.user.role) {
+      case "ClockIn":
+        return <Redirect to="/ClockIn" />;
+      case "Student":
+        return <Redirect to="/Student/" />;
+      case "Mentor":
+        return <Redirect push to="/Mentor/" />;
+      case "Admin":
+        return <Redirect push to="/Admin/" />;
+      case "SuperAdmin":
+        return <Redirect push to="/SuperAdmin/" />;
+      default:
+        return (
+          <div>
+            {warning}
+            <form onSubmit={this.handleSubmit}>
+              <input
+                type="radio"
+                value="Student"
+                name="role"
+                onChange={this.handleChangeRoleSelect}
+                checked={this.checkedHelper("Student")}
+              />{" "}
+              Leerling<br />
+              <input
+                type="radio"
+                value="ClockIn"
+                name="role"
+                onChange={this.handleChangeRoleSelect}
+                checked={this.checkedHelper("ClockIn")}
+              />Inlog Systeem<br />
+              <input
+                type="radio"
+                value="Mentor"
+                name="role"
+                onChange={this.handleChangeRoleSelect}
+                checked={this.checkedHelper("Mentor")}
+              />Mentor<br />
+              <input
+                type="radio"
+                value="Admin"
+                name="role"
+                onChange={this.handleChangeRoleSelect}
+                checked={this.checkedHelper("Admin")}
+              />Administrator<br />
+              <input
+                type="radio"
+                value="SuperAdmin"
+                name="role"
+                onChange={this.handleChangeRoleSelect}
+                checked={this.checkedHelper("SuperAdmin")}
+              />School Leiding<br />
+              <br />
+              gebruikesnaam/leerlingnummer<br />
+              <input
+                type="text"
+                name="username"
+                onChange={this.handleChangeUsername}
+              />
+              <br />
+              wachtwoord :<br />
+              <input
+                type="password"
+                name="password"
+                onChange={this.handleChangePassword}
+              />
+              <input type="submit" />
+            </form>
+          </div>
+        );
+    }
   }
 }
 const mapStateToProps = state => ({
@@ -110,6 +192,9 @@ const mapDispatchToProps = dispatch => ({
     dispatch(loginStudent(username, password)),
   loginMentor: (username, password) =>
     dispatch(loginMentor(username, password)),
-  loginAdmin: (username, password) => dispatch(loginAdmin(username, password))
+  loginAdmin: (username, password) => dispatch(loginAdmin(username, password)),
+  loginSuperAdmin: (username, password) =>
+    dispatch(loginSuperAdmin(username, password)),
+  checkCookieRole: () => dispatch(checkCookieRole())
 });
 export default connect(mapStateToProps, mapDispatchToProps)(LogIn);
